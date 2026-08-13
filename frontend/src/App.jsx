@@ -11,18 +11,37 @@ import Leaderboard from "./components/Leaderboard.jsx";
 // unnecessary complexity.
 function App() {
   const [selectedCountry, setSelectedCountry] = useState(null);
-  const [view, setView] = useState("list"); // "list" | "quiz" | "leaderboard"
+  const [view, setView] = useState("home"); // "home" | "list" | "quiz" | "leaderboard"
   // lastScore holds the final score after a quiz so Leaderboard can pre-fill it.
   const [lastScore, setLastScore] = useState(null);
 
+  // Home screen — two big coloured nav cards
+  if (view === "home") {
+    return (
+      <div>
+        <h1 className="home-title">🌍 Country Quiz Explorer</h1>
+        <div className="home-cards">
+          <button className="home-card home-card-countries" onClick={() => setView("list")}>
+            <span className="home-card-emoji">🌍</span>
+            <span className="home-card-label">Countries</span>
+            <span className="home-card-sub">Choose a country & play!</span>
+          </button>
+          <button className="home-card home-card-leaderboard" onClick={() => setView("leaderboard")}>
+            <span className="home-card-emoji">🏆</span>
+            <span className="home-card-label">Leaderboard</span>
+            <span className="home-card-sub">Top global scores</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <h1>🌍 Country Quiz Explorer</h1>
-
-      <nav style={{ marginBottom: "1rem" }}>
-        <button onClick={() => setView("list")}>Countries</button>{" "}
-        <button onClick={() => setView("leaderboard")}>Leaderboard</button>
-      </nav>
+      {/* Back button shown on all non-home screens */}
+      <button className="back-btn" onClick={() => setView("home")}>
+        ← Home
+      </button>
 
       {view === "list" && (
         <CountryList
