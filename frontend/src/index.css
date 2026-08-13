@@ -1,0 +1,35 @@
+/* Minimal global styles - flesh out with your own design later. */
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 2rem;
+  background: #f7f7fa;
+}
+
+.country-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.country-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.timer-bar {
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.timer-fill {
+  height: 100%;
+  background: #4caf50;
+  transition: width 1s linear;
+}
