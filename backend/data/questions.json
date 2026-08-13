@@ -11228,9 +11228,9 @@
         "Turkish",
         "Mongolian",
         "Greenlandic",
-        "Arabic"
+        "Hebrew"
       ],
-      "answer": "Arabic"
+      "answer": "Hebrew"
     },
     {
       "question": "What currency is used in Israel?",
@@ -18859,108 +18859,6 @@
         ".la"
       ],
       "answer": ".py"
-    }
-  ],
-  "PSE": [
-    {
-      "question": "What is the capital of Palestine?",
-      "options": [
-        null,
-        "Tbilisi",
-        "Tashkent",
-        "Ramallah"
-      ],
-      "answer": "Ramallah"
-    },
-    {
-      "question": "What is the official language of Palestine?",
-      "options": [
-        "Arabic",
-        "Kikongo",
-        "Urdu",
-        "Belizean Creole"
-      ],
-      "answer": "Arabic"
-    },
-    {
-      "question": "Which world region does Palestine belong to?",
-      "options": [
-        "Asia",
-        "Americas",
-        "Antarctic",
-        "Europe"
-      ],
-      "answer": "Asia"
-    },
-    {
-      "question": "Which subregion does Palestine belong to?",
-      "options": [
-        "Caribbean",
-        "Southern Asia",
-        "Western Asia",
-        "Central Europe"
-      ],
-      "answer": "Western Asia"
-    },
-    {
-      "question": "Which country shares a border with Palestine?",
-      "options": [
-        "Malaysia",
-        "El Salvador",
-        "Anguilla",
-        "Jordan"
-      ],
-      "answer": "Jordan"
-    },
-    {
-      "question": "Which of these countries borders Palestine?",
-      "options": [
-        "Iceland",
-        "Mayotte",
-        "Timor-Leste",
-        "Jordan"
-      ],
-      "answer": "Jordan"
-    },
-    {
-      "question": "Which of these countries does NOT share a border with Palestine?",
-      "options": [
-        "Jordan",
-        "Israel",
-        "Egypt",
-        "Armenia"
-      ],
-      "answer": "Armenia"
-    },
-    {
-      "question": "What is the internet country code (domain extension) for Palestine?",
-      "options": [
-        ".ps",
-        ".ac",
-        ".срб",
-        ".ls"
-      ],
-      "answer": ".ps"
-    },
-    {
-      "question": "Which of these countries has the largest land area?",
-      "options": [
-        "Indonesia",
-        "Palestine",
-        "Qatar",
-        "Bhutan"
-      ],
-      "answer": "Indonesia"
-    },
-    {
-      "question": "What is the international calling code for Palestine?",
-      "options": [
-        "+90",
-        "+970",
-        "+64",
-        "+1876"
-      ],
-      "answer": "+970"
     }
   ],
   "PYF": [

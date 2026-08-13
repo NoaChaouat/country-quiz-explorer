@@ -34,13 +34,16 @@ app.use("/api", questionsRouter);
 // We build flag URLs using flagcdn.com (free CDN) with the 2-letter country code.
 // This avoids any external API dependency that could change or require a key.
 app.get("/api/countries", (req, res) => {
-  const countries = allCountries.map((c) => ({
-    cca3: c.cca3,
-    name: { common: c.name.common },
-    region: c.region,
-    // flagcdn.com provides free SVG flags by 2-letter code (cca2), lowercased.
-    flags: { svg: `https://flagcdn.com/${c.cca2.toLowerCase()}.svg` },
-  }));
+  const EXCLUDED = new Set(["PSE"]); // Palestinian Territories — excluded per app requirements
+  const countries = allCountries
+    .filter((c) => !EXCLUDED.has(c.cca3))
+    .map((c) => ({
+      cca3: c.cca3,
+      name: { common: c.name.common },
+      region: c.region,
+      // flagcdn.com provides free SVG flags by 2-letter code (cca2), lowercased.
+      flags: { svg: `https://flagcdn.com/${c.cca2.toLowerCase()}.svg` },
+    }));
   res.json(countries);
 });
 
