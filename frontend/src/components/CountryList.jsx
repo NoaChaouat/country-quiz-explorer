@@ -47,24 +47,26 @@ export default function CountryList({ onSelectCountry }) {
 
   const regions = ["All", "Africa", "Americas", "Asia", "Europe", "Oceania"];
 
-  if (loading) return <p>Loading countries...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p className="loading-text">Loading countries...</p>;
+  if (error) return <p className="error-text">Error: {error}</p>;
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Search countries..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      <select value={region} onChange={(e) => setRegion(e.target.value)}>
-        {regions.map((r) => (
-          <option key={r} value={r}>
-            {r}
-          </option>
-        ))}
-      </select>
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search countries..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <select value={region} onChange={(e) => setRegion(e.target.value)}>
+          {regions.map((r) => (
+            <option key={r} value={r}>
+              {r}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <div className="country-grid">
         {filtered.map((country) => (
@@ -75,7 +77,7 @@ export default function CountryList({ onSelectCountry }) {
             className="country-card"
             onClick={() => onSelectCountry(country)}
           >
-            <img src={country.flags.svg} alt={country.name.common} width="60" />
+            <img src={country.flags.svg} alt={country.name.common} />
             <p>{country.name.common}</p>
           </button>
         ))}

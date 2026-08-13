@@ -7,6 +7,7 @@ const QUESTION_TIME = 15; // seconds per question
 // can route to the leaderboard and know what score to submit.
 export default function Quiz({ country, onFinish }) {
   const [questions, setQuestions] = useState([]);
+  const [ready, setReady] = useState(false); // show ready screen before first question
   const [current, setCurrent] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(QUESTION_TIME);
@@ -43,6 +44,7 @@ export default function Quiz({ country, onFinish }) {
   // We also stop the timer immediately once the user has picked an answer
   // (`selected !== null`) so the countdown doesn't keep running in the background.
   useEffect(() => {
+    if (!ready) return; // don't start until user clicks Ready
     if (selected !== null) return; // answer already chosen — don't start another tick
     if (timeLeft <= 0) {
       handleAnswer(null); // time's up - counts as wrong, same as a wrong click
@@ -52,7 +54,7 @@ export default function Quiz({ country, onFinish }) {
       setTimeLeft((t) => t - 1);
     }, 1000);
     return () => clearInterval(id);
-  }, [timeLeft, selected]);
+  }, [timeLeft, selected, ready]);
 
   // Reset the timer whenever we move to a new question.
   useEffect(() => {
@@ -77,46 +79,65 @@ export default function Quiz({ country, onFinish }) {
   }
 
   // Show error if backend has no questions for this country yet.
-  if (error) return <p>⚠️ {error} — try Israel or France for now.</p>;
+  if (error) return <p className="error-text">⚠️ {error}</p>;
   // Show loading spinner while fetch is in progress.
-  if (questions.length === 0) return <p>Loading questions...</p>;
+  if (questions.length === 0) return <p className="loading-text">Loading questions...</p>;
+
+  // Ready screen — shown after questions load but before the quiz starts.
+  if (!ready) {
+    return (
+      <div className="ready-screen">
+        <img src={country.flags.svg} alt={country.name.common} />
+        <h2>{country.name.common}</h2>
+        <p>10 questions · 15 seconds each<br />Good luck!</p>
+        <button className="ready-btn" onClick={() => setReady(true)}>
+          🟢 Ready — Start!
+        </button>
+      </div>
+    );
+  }
 
   const q = questions[current];
   const progressPct = (timeLeft / QUESTION_TIME) * 100;
+  const timerClass =
+    timeLeft <= 5 ? "timer-fill danger" :
+    timeLeft <= 9 ? "timer-fill warning" :
+    "timer-fill";
 
   return (
-    <div>
-      <h2>{country.name.common} Quiz</h2>
-      <p>
-        Question {current + 1} / {questions.length} — Score: {score}
+    <div className="quiz-container">
+      <div className="quiz-header">
+        <h2>🌍 {country.name.common}</h2>
+      </div>
+      <p className="quiz-meta">
+        Question {current + 1} / {questions.length} &nbsp;·&nbsp; Score: {score}
       </p>
 
       <div className="timer-bar">
-        <div className="timer-fill" style={{ width: `${progressPct}%` }} />
+        <div className={timerClass} style={{ width: `${progressPct}%` }} />
       </div>
-      <p>{timeLeft}s left</p>
+      <p className="timer-label">{timeLeft}s remaining</p>
 
-      <h3>{q.question}</h3>
-      <div>
-        {q.options.map((opt) => (
-          <button
-            key={opt}
-            onClick={() => handleAnswer(opt)}
-            disabled={selected !== null}
-            style={{
-              display: "block",
-              margin: "0.5rem 0",
-              background:
-                selected && opt === q.answer
-                  ? "#c8f7c5"
-                  : selected === opt
-                  ? "#f7c5c5"
-                  : undefined,
-            }}
-          >
-            {opt}
-          </button>
-        ))}
+      <p className="question-text">{q.question}</p>
+
+      <div className="options-grid">
+        {q.options.map((opt) => {
+          let cls = "option-btn";
+          if (selected !== null) {
+            if (opt === q.answer) cls += " correct";
+            else if (opt === selected) cls += " wrong";
+          }
+          return (
+            <button
+              key={opt}
+              className={cls}
+              onClick={() => handleAnswer(opt)}
+              disabled={selected !== null}
+            >
+              {opt}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

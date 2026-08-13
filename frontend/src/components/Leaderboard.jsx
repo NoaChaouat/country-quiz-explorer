@@ -39,18 +39,19 @@ export default function Leaderboard({ lastScore, lastCountry }) {
     loadLeaderboard(); // refresh the board so the user sees themselves immediately
   }
 
+  const medals = ["🥇", "🥈", "🥉"];
+
   return (
-    <div>
+    <div className="leaderboard-container">
       <h2>🏆 Leaderboard</h2>
 
       {/* Only show the submit form if the user just finished a quiz (lastScore exists)
           and hasn't submitted yet. */}
       {lastScore !== null && !submitted && (
-        <form onSubmit={submitScore}>
+        <form className="score-submit" onSubmit={submitScore}>
           <p>
-            You scored <strong>{lastScore}</strong> on{" "}
-            <strong>{lastCountry?.name?.common}</strong>! Enter your name to
-            save it:
+            You scored <strong>{lastScore} / 10</strong> on{" "}
+            <strong>{lastCountry?.name?.common}</strong>! Enter your name to save it:
           </p>
           <input
             placeholder="Your username"
@@ -61,15 +62,40 @@ export default function Leaderboard({ lastScore, lastCountry }) {
         </form>
       )}
 
-      {submitted && <p>✅ Score saved! See yourself on the board below.</p>}
+      {submitted && (
+        <p style={{ color: "#22c55e", marginBottom: "1.5rem" }}>
+          ✅ Score saved! See yourself on the board below.
+        </p>
+      )}
 
-      <ol>
-        {scores.map((s, i) => (
-          <li key={i}>
-            {s.username} — {s.score} pts ({s.country})
-          </li>
-        ))}
-      </ol>
+      {scores.length === 0 ? (
+        <p className="loading-text">No scores yet — be the first to play!</p>
+      ) : (
+        <table className="leaderboard-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Player</th>
+              <th>Score</th>
+              <th>Country</th>
+            </tr>
+          </thead>
+          <tbody>
+            {scores.map((s, i) => (
+              <tr key={i}>
+                <td>{medals[i] ?? i + 1}</td>
+                <td>{s.username}</td>
+                <td>{s.score} / 10</td>
+                <td>{s.country}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      <button className="play-again-btn" onClick={() => window.location.reload()}>
+        ← Play again
+      </button>
     </div>
   );
 }
