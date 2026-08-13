@@ -59,10 +59,11 @@ body {
 }
 
 .home-card-label {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 900;
-  letter-spacing: 0.12em;
+  letter-spacing: 3px;
   text-transform: uppercase;
+  font-family: 'Arial Black', Arial, sans-serif;
 }
 
 .home-card-sub {
@@ -71,20 +72,28 @@ body {
   opacity: 0.75;
 }
 
-/* Countries card — yellow with orange-red glow */
+/* Countries card — lime-to-yellow with orange glow (exact original colors) */
 .home-card-countries {
-  background: linear-gradient(135deg, #ffe600, #ffff00);
-  border-color: #ff4500;
-  box-shadow: 0 0 30px rgba(255, 69, 0, 0.7), 0 0 60px rgba(255, 230, 0, 0.3);
-  color: #0d1b2e;
+  background: linear-gradient(135deg, #ccff00, #ffdd00);
+  border-color: #ff6b00;
+  box-shadow: 0 0 30px rgba(204, 255, 0, 0.5);
+  color: #1a1a3e;
 }
 
-/* Leaderboard card — purple-magenta with gold glow */
+.home-card-countries:hover {
+  box-shadow: 0 0 60px rgba(204, 255, 0, 0.8);
+}
+
+/* Leaderboard card — purple-to-magenta with gold glow (exact original colors) */
 .home-card-leaderboard {
-  background: linear-gradient(135deg, #9b00ff, #ff00e0);
-  border-color: #ffaa00;
-  box-shadow: 0 0 30px rgba(255, 170, 0, 0.6), 0 0 60px rgba(155, 0, 255, 0.35);
+  background: linear-gradient(135deg, #9d00ff, #ff00ff);
+  border-color: #ffdd00;
+  box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
   color: #ffffff;
+}
+
+.home-card-leaderboard:hover {
+  box-shadow: 0 0 60px rgba(255, 0, 255, 0.8);
 }
 
 /* ── Nav bar (inside country list / quiz / leaderboard views) ── */
