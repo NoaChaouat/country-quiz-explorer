@@ -4,7 +4,7 @@ const API_URL = "https://country-quiz-explorer.onrender.com/api";
 
 // Leaderboard receives lastScore and lastCountry from App.jsx after a quiz ends.
 // If those props exist, we show a "submit your score" form pre-filled with the real score.
-export default function Leaderboard({ lastScore, lastCountry }) {
+export default function Leaderboard({ lastScore, lastCountry, onPlayAgain }) {
   const [scores, setScores] = useState([]);
   const [username, setUsername] = useState("");
   // submitted tracks whether the user already saved this score, to avoid duplicates.
@@ -17,9 +17,7 @@ export default function Leaderboard({ lastScore, lastCountry }) {
   }
 
   // Load the leaderboard as soon as this component appears on screen.
-  useEffect(() => {
-    loadLeaderboard();
-  }, []);
+  useEffect(() => { loadLeaderboard(); }, []);
 
   async function submitScore(e) {
     e.preventDefault(); // prevents the page from refreshing (default browser behavior for forms)
@@ -42,60 +40,60 @@ export default function Leaderboard({ lastScore, lastCountry }) {
   const medals = ["🥇", "🥈", "🥉"];
 
   return (
-    <div className="leaderboard-container">
-      <h2>🏆 Leaderboard</h2>
+    <section className="leaderboard-section">
+      <h2>🏆 LEADERBOARD</h2>
 
-      {/* Only show the submit form if the user just finished a quiz (lastScore exists)
-          and hasn't submitted yet. */}
+      {/* Only show the submit form if the user just finished a quiz and hasn't submitted yet. */}
       {lastScore !== null && !submitted && (
-        <form className="score-submit" onSubmit={submitScore}>
+        <div className="score-submit">
           <p>
-            You scored <strong>{lastScore} / 10</strong> on{" "}
-            <strong>{lastCountry?.name?.common}</strong>! Enter your name to save it:
+            🎉 Great job! You scored{" "}
+            <strong>{lastScore}</strong> on{" "}
+            <em>{lastCountry?.name?.common}</em>!
           </p>
-          <input
-            placeholder="Your username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <button type="submit">Save score</button>
-        </form>
+          <form onSubmit={submitScore}>
+            <input
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+            <button type="submit">💾 SAVE SCORE</button>
+          </form>
+        </div>
       )}
 
       {submitted && (
-        <p style={{ color: "#22c55e", marginBottom: "1.5rem" }}>
-          ✅ Score saved! See yourself on the board below.
-        </p>
+        <p className="score-saved-msg">✅ Score saved! You're on the leaderboard!</p>
       )}
 
-      {scores.length === 0 ? (
-        <p className="loading-text">No scores yet — be the first to play!</p>
-      ) : (
-        <table className="leaderboard-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Player</th>
-              <th>Score</th>
-              <th>Country</th>
-            </tr>
-          </thead>
-          <tbody>
+      <div>
+        <h3 style={{ fontSize: "1.8rem", color: "#fff", textTransform: "uppercase", letterSpacing: "2px", marginBottom: "1.25rem" }}>
+          Top Scores
+        </h3>
+        {scores.length === 0 ? (
+          <p style={{ color: "#ffdd00", textAlign: "center", fontSize: "1.2rem" }}>
+            ❓ No scores yet. Be the first!
+          </p>
+        ) : (
+          <ol className="leaderboard-list">
             {scores.map((s, i) => (
-              <tr key={i}>
-                <td>{medals[i] ?? i + 1}</td>
-                <td>{s.username}</td>
-                <td>{s.score} / 10</td>
-                <td>{s.country}</td>
-              </tr>
+              <li key={i} className="lb-row">
+                <span className="lb-rank">{medals[i] ?? i + 1}</span>
+                <div style={{ flex: 1 }}>
+                  <div className="lb-name">{s.username}</div>
+                  <div className="lb-country">{s.country}</div>
+                </div>
+                <span className="lb-score">{s.score}</span>
+              </li>
             ))}
-          </tbody>
-        </table>
-      )}
+          </ol>
+        )}
+      </div>
 
-      <button className="play-again-btn" onClick={() => window.location.reload()}>
-        ← Play again
+      <button className="play-again-btn" onClick={onPlayAgain}>
+        🎮 TAKE ANOTHER QUIZ
       </button>
-    </div>
+    </section>
   );
 }

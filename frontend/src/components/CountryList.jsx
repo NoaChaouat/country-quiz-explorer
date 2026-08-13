@@ -3,10 +3,9 @@ import { useEffect, useState } from "react";
 // CountryList: fetches all countries once, then filters them client-side.
 //
 // DESIGN CHOICE: we fetch the full list once on mount and filter in the
-// browser (useMemo-free simple filter here) rather than re-fetching from the
-// API on every keystroke. This is faster for the user and avoids hammering
-// the external API - a reasonable tradeoff since the country list doesn't
-// change during a session.
+// browser rather than re-fetching from the API on every keystroke.
+// This is faster for the user and avoids hammering the external API —
+// a reasonable tradeoff since the country list doesn't change during a session.
 export default function CountryList({ onSelectCountry }) {
   const [countries, setCountries] = useState([]);
   const [search, setSearch] = useState("");
@@ -16,11 +15,9 @@ export default function CountryList({ onSelectCountry }) {
 
   useEffect(() => {
     // useEffect with an empty dependency array [] runs once, right after the
-    // component first renders - the right place for a one-time data fetch.
+    // component first renders — the right place for a one-time data fetch.
     async function fetchCountries() {
       try {
-        // Fetching via our own backend instead of directly from restcountries.com.
-        // Our backend proxies the request - see server.js GET /api/countries.
         const res = await fetch("https://country-quiz-explorer.onrender.com/api/countries");
         if (!res.ok) throw new Error("Failed to fetch countries");
         const data = await res.json();
@@ -34,24 +31,21 @@ export default function CountryList({ onSelectCountry }) {
     fetchCountries();
   }, []);
 
-  // Derived value, recomputed on every render - fine here since the list
+  // Derived value, recomputed on every render — fine here since the list
   // size (~250 countries) is small. For a much larger dataset we'd reach
   // for useMemo to avoid re-filtering on unrelated re-renders.
   const filtered = countries.filter((c) => {
-    const matchesSearch = c.name.common
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const matchesSearch = c.name.common.toLowerCase().includes(search.toLowerCase());
     const matchesRegion = region === "All" || c.region === region;
     return matchesSearch && matchesRegion;
   });
 
   const regions = ["All", "Africa", "Americas", "Asia", "Europe", "Oceania"];
 
-  if (loading) return <p className="loading-text">Loading countries...</p>;
-  if (error) return <p className="error-text">Error: {error}</p>;
-
   return (
-    <div>
+    <section className="country-list-section">
+      <h2>Browse Countries</h2>
+
       <div className="search-bar">
         <input
           type="text"
@@ -61,27 +55,35 @@ export default function CountryList({ onSelectCountry }) {
         />
         <select value={region} onChange={(e) => setRegion(e.target.value)}>
           {regions.map((r) => (
-            <option key={r} value={r}>
-              {r}
-            </option>
+            <option key={r} value={r}>{r === "All" ? "All Regions" : r}</option>
           ))}
         </select>
       </div>
 
-      <div className="country-grid">
-        {filtered.map((country) => (
-          // Using <button> instead of <div> makes the card keyboard-accessible
-          // and lets the browser handle click events reliably.
-          <button
-            key={country.cca3}
-            className="country-card"
-            onClick={() => onSelectCountry(country)}
-          >
-            <img src={country.flags.svg} alt={country.name.common} />
-            <p>{country.name.common}</p>
-          </button>
-        ))}
-      </div>
-    </div>
+      {loading && <p className="loading-text">⏳ Loading countries...</p>}
+      {error   && <p className="error-text">❌ {error}</p>}
+
+      {!loading && !error && (
+        <div className="country-grid">
+          {filtered.map((country) => (
+            // Using <button> instead of <div> makes the card keyboard-accessible
+            // and lets the browser handle click events reliably.
+            <button
+              key={country.cca3}
+              className="country-card"
+              onClick={() => onSelectCountry(country)}
+            >
+              <img src={country.flags.svg} alt={country.name.common} />
+              <span>{country.name.common}</span>
+            </button>
+          ))}
+          {filtered.length === 0 && (
+            <p style={{ color: "#ff6b00", fontWeight: "bold", gridColumn: "1/-1" }}>
+              ❓ No countries found
+            </p>
+          )}
+        </div>
+      )}
+    </section>
   );
 }

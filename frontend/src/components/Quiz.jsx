@@ -27,8 +27,6 @@ export default function Quiz({ country, onFinish }) {
         const data = await res.json();
         setQuestions(data);
       } catch (err) {
-        // If the country has no questions in our database, show a friendly message
-        // instead of crashing the app.
         setQuestions([]);
         setError(err.message);
       }
@@ -44,15 +42,13 @@ export default function Quiz({ country, onFinish }) {
   // We also stop the timer immediately once the user has picked an answer
   // (`selected !== null`) so the countdown doesn't keep running in the background.
   useEffect(() => {
-    if (!ready) return; // don't start until user clicks Ready
-    if (selected !== null) return; // answer already chosen — don't start another tick
+    if (!ready) return;
+    if (selected !== null) return;
     if (timeLeft <= 0) {
-      handleAnswer(null); // time's up - counts as wrong, same as a wrong click
+      handleAnswer(null); // time's up — counts as wrong
       return;
     }
-    const id = setInterval(() => {
-      setTimeLeft((t) => t - 1);
-    }, 1000);
+    const id = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(id);
   }, [timeLeft, selected, ready]);
 
@@ -78,20 +74,18 @@ export default function Quiz({ country, onFinish }) {
     }, 800); // brief pause so the user sees which answer was correct
   }
 
-  // Show error if backend has no questions for this country yet.
   if (error) return <p className="error-text">⚠️ {error}</p>;
-  // Show loading spinner while fetch is in progress.
-  if (questions.length === 0) return <p className="loading-text">Loading questions...</p>;
+  if (questions.length === 0) return <p className="loading-text">⏳ Loading Quiz...</p>;
 
-  // Ready screen — shown after questions load but before the quiz starts.
+  // Ready screen — shown after questions load, before the quiz starts.
   if (!ready) {
     return (
       <div className="ready-screen">
         <img src={country.flags.svg} alt={country.name.common} />
-        <h2>{country.name.common}</h2>
-        <p>10 questions · 15 seconds each<br />Good luck!</p>
+        <h2>{country.name.common.toUpperCase()}</h2>
+        <p>10 questions · 15 seconds each · Good luck!</p>
         <button className="ready-btn" onClick={() => setReady(true)}>
-          🟢 Ready — Start!
+          🟢 READY — START!
         </button>
       </div>
     );
@@ -99,24 +93,25 @@ export default function Quiz({ country, onFinish }) {
 
   const q = questions[current];
   const progressPct = (timeLeft / QUESTION_TIME) * 100;
-  const timerClass =
-    timeLeft <= 5 ? "timer-fill danger" :
-    timeLeft <= 9 ? "timer-fill warning" :
-    "timer-fill";
+  const timerClass = timeLeft <= 5 ? "danger" : timeLeft <= 9 ? "warning" : "";
 
   return (
-    <div className="quiz-container">
-      <div className="quiz-header">
-        <h2>🌍 {country.name.common}</h2>
+    <section className="quiz-section">
+      <div className="quiz-top">
+        <h2 className="quiz-country-name">{country.name.common}</h2>
+        <div className="quiz-score-badge">
+          {score}/{questions.length}
+        </div>
       </div>
-      <p className="quiz-meta">
-        Question {current + 1} / {questions.length} &nbsp;·&nbsp; Score: {score}
+
+      <p className="quiz-question-label">
+        QUESTION {current + 1} / {questions.length}
       </p>
 
       <div className="timer-bar">
-        <div className={timerClass} style={{ width: `${progressPct}%` }} />
+        <div className="timer-fill" style={{ width: `${progressPct}%` }} />
       </div>
-      <p className="timer-label">{timeLeft}s remaining</p>
+      <p className={`timer-label ${timerClass}`}>{timeLeft}s</p>
 
       <p className="question-text">{q.question}</p>
 
@@ -139,6 +134,6 @@ export default function Quiz({ country, onFinish }) {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }
