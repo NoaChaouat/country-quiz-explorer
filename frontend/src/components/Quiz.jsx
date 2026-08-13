@@ -20,7 +20,7 @@ export default function Quiz({ country, onFinish }) {
     async function fetchQuestions() {
       try {
         const res = await fetch(
-          `http://localhost:4000/api/questions/${country.cca3}`
+          `https://country-quiz-explorer.onrender.com/api/questions/${country.cca3}`
         );
         if (!res.ok) throw new Error("No questions found for this country");
         const data = await res.json();

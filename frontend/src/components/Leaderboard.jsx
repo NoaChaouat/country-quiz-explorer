@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:4000/api";
+const API_URL = "https://country-quiz-explorer.onrender.com/api";
 
 // Leaderboard receives lastScore and lastCountry from App.jsx after a quiz ends.
 // If those props exist, we show a "submit your score" form pre-filled with the real score.

@@ -21,7 +21,7 @@ export default function CountryList({ onSelectCountry }) {
       try {
         // Fetching via our own backend instead of directly from restcountries.com.
         // Our backend proxies the request - see server.js GET /api/countries.
-        const res = await fetch("http://localhost:4000/api/countries");
+        const res = await fetch("https://country-quiz-explorer.onrender.com/api/countries");
         if (!res.ok) throw new Error("Failed to fetch countries");
         const data = await res.json();
         setCountries(data);
